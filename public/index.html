@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Sistema de Gestión de Monitores y Salas de Cómputo - UTP">
+    <title>UTP | Gestión de Monitores</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Pantalla de Login (Fondo completo Glassmorphism) -->
+    <div id="login-screen" class="login-layout">
+        <div class="login-overlay"></div>
+        <div class="login-card-glass">
+            <div class="login-branding">
+                <img src="assets/logo-utp.webp" alt="Logo UTP" class="utp-logo-large">
+                <h1>UTP<span class="highlight">Sync</span></h1>
+                <p>Plataforma integral de gestión de espacios y monitores</p>
+            </div>
+            
+            <form id="form-login" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label>Cédula de Identidad</label>
+                    <div class="input-wrapper">
+                        <i class="fa-regular fa-id-badge"></i>
+                        <input type="text" id="login-cedula" class="form-control" required placeholder="Ej. 1088123456">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Contraseña</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-lock"></i>
+                        <input type="password" id="login-password" class="form-control" required placeholder="••••••••">
+                    </div>
+                </div>
+                <div id="login-error" class="error-message" style="display:none;"></div>
+                <button type="submit" class="btn-primary btn-block mt-4 btn-login">
+                    <span>Acceder al Sistema</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </form>
+            <div class="login-footer">
+                <p>¿Quieres ser monitor?</p>
+                <button class="btn-secondary btn-block mt-2" onclick="showRegisterScreen()">Solicitar Registro</button>
+                <p class="mt-2" style="font-size: 0.8rem; color: var(--text-muted);">Sistema exclusivo para personal autorizado UTP.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pantalla de Registro (Fondo completo Glassmorphism) -->
+    <div id="register-screen" class="login-layout" style="display: none;">
+        <div class="login-overlay"></div>
+        <div class="login-card-glass" style="max-width: 600px; padding: 2rem; max-height: 90vh; overflow-y: auto;">
+            <div class="login-branding">
+                <img src="assets/logo-utp.webp" alt="Logo UTP" class="utp-logo-large" style="width: 60px;">
+                <h1>UTP<span class="highlight">Sync</span></h1>
+                <p>Solicitud de Registro como Monitor</p>
+            </div>
+            
+            <form id="form-register" onsubmit="handleRegister(event)">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="form-group">
+                        <label>Nombre Completo</label>
+                        <input type="text" id="reg-name" class="form-control" required placeholder="Ej. Juan Pérez">
+                    </div>
+                    <div class="form-group">
+                        <label>Cédula o TI</label>
+                        <input type="text" id="reg-cedula" class="form-control" required placeholder="Ej. 1088123456">
+                    </div>
+                    <div class="form-group">
+                        <label>Correo UTP</label>
+                        <input type="email" id="reg-correo" class="form-control" required placeholder="hola@utp.edu.co" pattern=".+@utp\.edu\.co" title="Debe ser un correo @utp.edu.co">
+                    </div>
+                    <div class="form-group">
+                        <label>Promedio Estudiantil</label>
+                        <input type="number" id="reg-promedio" class="form-control" required step="0.1" min="3.5" max="5.0" placeholder="Ej. 4.5" oninput="if(parseFloat(this.value)>5)this.value='5.0'" onblur="let v=parseFloat(this.value); if(v>5)this.value='5.0'; else if(v<3.5&&this.value!='')this.value='3.5'; this.value=Math.round(v*10)/10||''">
+                    </div>
+                    <div class="form-group">
+                        <label>Número Celular</label>
+                        <input type="tel" id="reg-celular" class="form-control" required placeholder="Ej. 3001234567" maxlength="15" pattern="[0-9+\-\s]{7,15}" title="Número de celular válido">
+                    </div>
+                    <div class="form-group" style="grid-column: span 2;">
+                        <label>Programa Académico</label>
+                        <select id="reg-programa" class="form-control" required>
+                            <option value="" disabled selected>Selecciona tu programa...</option>
+                            <optgroup label="Administración">
+                                <option>Administración Ambiental</option>
+                                <option>Administración del Medio Ambiente</option>
+                                <option>Administración de Empresas</option>
+                                <option>Administración Industrial</option>
+                                <option>Administración del Turismo Sostenible</option>
+                            </optgroup>
+                            <optgroup label="Ciencias">
+                                <option>Ciencias del Deporte y la Recreación</option>
+                                <option>Economía</option>
+                                <option>Física</option>
+                                <option>Matemáticas</option>
+                                <option>Psicología</option>
+                                <option>Química Industrial</option>
+                            </optgroup>
+                            <optgroup label="Ingeniería">
+                                <option>Ingeniería Civil</option>
+                                <option>Ingeniería de Manufactura</option>
+                                <option>Ingeniería de Sistemas y Computación</option>
+                                <option>Ingeniería Eléctrica</option>
+                                <option>Ingeniería Electrónica</option>
+                                <option>Ingeniería Física</option>
+                                <option>Ingeniería Industrial</option>
+                                <option>Ingeniería Mecánica</option>
+                                <option>Ingeniería Mecatrónica</option>
+                                <option>Ingeniería Química</option>
+                                <option>Ingeniería en Procesos Sostenibles de las Maderas</option>
+                            </optgroup>
+                            <optgroup label="Licenciatura">
+                                <option>Licenciatura en Artes Visuales</option>
+                                <option>Licenciatura en Bilingüismo con énfasis en Inglés</option>
+                                <option>Licenciatura en Comunicación e Informática Educativa</option>
+                                <option>Licenciatura en Educación Básica Primaria</option>
+                                <option>Licenciatura en Educación Infantil</option>
+                                <option>Licenciatura en Español y Literatura</option>
+                                <option>Licenciatura en Filosofía</option>
+                                <option>Licenciatura en Música</option>
+                                <option>Licenciatura en Tecnología</option>
+                            </optgroup>
+                            <optgroup label="Medicina y Salud">
+                                <option>Medicina</option>
+                                <option>Medicina Veterinaria y Zootecnia</option>
+                            </optgroup>
+                            <optgroup label="Tecnología">
+                                <option>Tecnología Eléctrica</option>
+                                <option>Tecnología en Atención Prehospitalaria</option>
+                                <option>Tecnología en Desarrollo de Procesos Químicos Sostenibles</option>
+                                <option>Tecnología en Desarrollo de Software</option>
+                                <option>Tecnología en Diseño y Construcción de Instalaciones Eléctricas de Media y Baja Tensión</option>
+                                <option>Tecnología en Gestión Logística</option>
+                                <option>Tecnología en Gestión del Turismo Sostenible</option>
+                                <option>Tecnología en Mecatrónica</option>
+                                <option>Tecnología en Procesos de Fabricación Metalmecánica</option>
+                                <option>Tecnología en Producción Agrícola</option>
+                                <option>Tecnología en Producción Forestal</option>
+                                <option>Tecnología en Regencia de Farmacia</option>
+                                <option>Tecnología Industrial</option>
+                                <option>Tecnología Mecánica</option>
+                                <option>Tecnología Química</option>
+                            </optgroup>
+                            <optgroup label="Técnico Profesional">
+                                <option>Técnico Profesional en Mecatrónica</option>
+                            </optgroup>
+                        </select>
+                    </div>
+                    <div class="form-group" style="grid-column: span 2;">
+                        <label>Contraseña</label>
+                        <input type="password" id="reg-password" class="form-control" required placeholder="••••••••">
+                    </div>
+                </div>
+                
+                <div class="form-group mt-3">
+                    <label>Tiempo Disponible (Marca tus horarios)</label>
+                    <div class="schedule-grid" id="reg-schedule-grid" style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin-top: 10px;">
+                        <!-- Generado por JS -->
+                    </div>
+                </div>
+
+                <div id="register-error" class="error-message" style="display:none;"></div>
+                <button type="submit" class="btn-primary btn-block mt-4 btn-register">
+                    <span>Enviar Solicitud</span>
+                    <i class="fa-solid fa-paper-plane"></i>
+                </button>
+                <button type="button" class="btn-secondary btn-block mt-2" onclick="showLoginScreen()">Volver al Login</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Contenedor Principal (App) -->
+    <div class="app-layout" id="app-container" style="display: none;">
+        
+        <!-- Sidebar Izquierdo -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <img src="assets/logo-utp.webp" alt="Logo UTP" class="utp-logo-small">
+                    <span>UTP<span class="highlight">Sync</span></span>
+                </div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <div class="nav-section">PRINCIPAL</div>
+                <ul>
+                    <li class="active" data-view="dashboard">
+                        <div class="nav-icon"><i class="fa-solid fa-border-all"></i></div> 
+                        <span>Panel General</span>
+                    </li>
+                    <li data-view="asignaciones">
+                        <div class="nav-icon"><i class="fa-solid fa-calendar-check"></i></div> 
+                        <span>Asignaciones</span>
+                    </li>
+                    <li data-view="cambios">
+                        <div class="nav-icon"><i class="fa-solid fa-arrow-right-arrow-left"></i></div> 
+                        <span>Cambios de Turno</span>
+                        <div class="nav-badge" id="nav-badge-cambios">0</div>
+                    </li>
+                </ul>
+                <div class="nav-section admin-only">ADMINISTRACIÓN</div>
+                <ul>
+                    <li data-view="salas" class="admin-only">
+                        <div class="nav-icon"><i class="fa-solid fa-server"></i></div> 
+                        <span>Infraestructura</span>
+                    </li>
+                    <li data-view="usuarios" class="admin-only">
+                        <div class="nav-icon"><i class="fa-solid fa-users-gear"></i></div> 
+                        <span>Equipo de Trabajo</span>
+                        <div class="nav-badge" id="nav-badge-usuarios" style="display:none;">0</div>
+                    </li>
+                    <li data-view="configuracion" class="admin-only">
+                        <div class="nav-icon"><i class="fa-solid fa-gear"></i></div> 
+                        <span>Configuración</span>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="sidebar-user-card">
+                <div class="avatar" id="current-user-avatar">AD</div>
+                <div class="user-details">
+                    <span class="name" id="current-user-name">Admin</span>
+                    <span class="role" id="current-user-role">Administrador</span>
+                </div>
+                <button class="btn-logout-icon" onclick="handleLogout()" title="Cerrar Sesión">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Área Central de Contenido -->
+        <main class="main-area">
+            <header class="topbar">
+                <div class="breadcrumb">
+                    <span class="text-muted">Inicio</span>
+                    <i class="fa-solid fa-chevron-right separator"></i>
+                    <span class="current-page" id="topbar-title">Panel General</span>
+                </div>
+                <div class="topbar-search">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" placeholder="Buscar monitores, salas, IDs...">
+                    <div class="search-shortcut">⌘K</div>
+                </div>
+                <div class="topbar-actions">
+                    <button class="icon-btn">
+                        <i class="fa-regular fa-bell"></i>
+                        <span class="notification-dot pulsating"></span>
+                    </button>
+                </div>
+            </header>
+
+            <div class="content-scroll" id="content-area">
+                <!-- Vistas dinámicas -->
+            </div>
+        </main>
+
+        <!-- Panel Lateral Derecho (Widgets y Actividad) -->
+        <aside class="right-panel">
+            <div class="panel-section">
+                <h3 class="panel-title">Turnos de Hoy</h3>
+                <div class="timeline" id="today-timeline">
+                    <!-- Turnos dinámicos -->
+                </div>
+            </div>
+            
+            <div class="panel-separator"></div>
+
+            <div class="panel-section">
+                <h3 class="panel-title">Actividad Reciente</h3>
+                <div class="activity-feed" id="activity-feed">
+                    <!-- Feed dinámico -->
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <!-- Modales -->
+    <div class="modal-backdrop" id="modal">
+        <div class="modal-panel">
+            <div class="modal-header">
+                <h3 id="modal-title">Título</h3>
+                <button class="btn-close-modal"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body" id="modal-body">
+                <!-- Contenido -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <script src="app.js"></script>
+</body>
+</html>
